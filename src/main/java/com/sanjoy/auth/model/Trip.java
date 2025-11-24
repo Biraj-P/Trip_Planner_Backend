@@ -1,5 +1,6 @@
 package com.sanjoy.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Date;
@@ -15,7 +16,11 @@ public class Trip {
 
     private String destination;
     private Double budget;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+
     private Date endDate;
     private Boolean femaleAllowed;
     private Integer maleCount;
