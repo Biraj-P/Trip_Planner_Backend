@@ -1,56 +1,38 @@
-package com.sanjoy.auth.model;
+package com.sanjoy.auth.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import java.util.List;
-
-@Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProfileResponse {
     private Long id;
-
     private String name;
     private String email;
     private String picture;
-
-    // Profile fields
     private Integer age;
     private String gender;
-
-    @Column(name = "phone_number")
     private String phoneNumber;
-
     private String college;
     private String course;
-
-    @Column(name = "graduation_year")
     private Integer graduationYear;
-
-    @Column(length = 500)
     private String bio;
 
-    // If you have any Trip relationships in User, add @JsonIgnore
-    @OneToMany(mappedBy = "creator")
-    @JsonIgnore  // ADD THIS
-    private List<Trip> createdTrips;
-
-    @ManyToMany(mappedBy = "members")
-    @JsonIgnore  // ADD THIS
-    private List<Trip> joinedTrips;
-
-    public User() {}
-
-    public User(String name, String email, String picture) {
+    // Constructor
+    public ProfileResponse(Long id, String name, String email, String picture,
+                           Integer age, String gender, String phoneNumber,
+                           String college, String course, Integer graduationYear, String bio) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.picture = picture;
+        this.age = age;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.college = college;
+        this.course = course;
+        this.graduationYear = graduationYear;
+        this.bio = bio;
     }
 
-    // All getters and setters (including new profile fields)
+    // Getters and setters (all fields)
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

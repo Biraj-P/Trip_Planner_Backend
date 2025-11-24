@@ -1,21 +1,20 @@
 package com.sanjoy.auth;
 
 import com.sanjoy.auth.config.CustomOAuth2UserService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
-
-    // ========================================
-    // INJECT FRONTEND URL FROM PROPERTIES
-    // ========================================
-    @Value("${app.frontend.url}")
-    private String frontendUrl;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -26,37 +25,65 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/public/**", "/logout").permitAll()
+                        // CRITICAL: Allow OPTIONS requests without authentication
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // Allow public endpoints
+                        .requestMatchers("/", "/login/**", "/oauth2/**", "/error").permitAll()
+                        // All other requests require authentication
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                        // Use variable instead of hardcoded URL
-                        .defaultSuccessUrl(frontendUrl + "/dashboard", true)
+                        .defaultSuccessUrl("http://localhost:5173/dashboard", true)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessHandler(logoutSuccessHandler())
+                        .logoutSuccessUrl("http://localhost:5173/")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
-                        .permitAll()
                 );
 
         return http.build();
     }
 
     @Bean
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return (request, response, authentication) -> {
-            response.setStatus(200);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"message\": \"Logged out successfully\"}");
-            response.getWriter().flush();
-        };
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Allow specific origins
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost:3000"
+        ));
+
+        // Allow all HTTP methods including OPTIONS
+        configuration.setAllowedMethods(Arrays.asList(
+                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+        ));
+
+        // Allow all headers
+        configuration.setAllowedHeaders(List.of("*"));
+
+        // Allow credentials (cookies, authorization headers)
+        configuration.setAllowCredentials(true);
+
+        // Cache preflight response for 1 hour
+        configuration.setMaxAge(3600L);
+
+        // Expose headers that frontend can access
+        configuration.setExposedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type"
+        ));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

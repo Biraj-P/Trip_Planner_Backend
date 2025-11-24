@@ -1,18 +1,9 @@
-package com.sanjoy.auth.model;
+package com.sanjoy.auth.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import java.util.Date;
-import java.util.List;
 
-@Entity
-@Table(name = "trips")
-public class Trip {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TripDTO {
     private Long id;
-
     private String destination;
     private Double budget;
     private Date startDate;
@@ -20,23 +11,33 @@ public class Trip {
     private Boolean femaleAllowed;
     private Integer maleCount;
     private Integer femaleCount;
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private User creator;
-
-    @ManyToMany
-    @JoinTable(
-            name = "trip_members",
-            joinColumns = @JoinColumn(name = "trip_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @JsonIgnore  // ADD THIS: Prevent infinite recursion
-    private List<User> members;
-
     private String status;
 
-    // All getters and setters (same as before)
+    // Creator info (without circular reference)
+    private Long creatorId;
+    private String creatorName;
+    private String creatorEmail;
+
+    // Constructor
+    public TripDTO(Long id, String destination, Double budget, Date startDate,
+                   Date endDate, Boolean femaleAllowed, Integer maleCount,
+                   Integer femaleCount, String status, Long creatorId,
+                   String creatorName, String creatorEmail) {
+        this.id = id;
+        this.destination = destination;
+        this.budget = budget;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.femaleAllowed = femaleAllowed;
+        this.maleCount = maleCount;
+        this.femaleCount = femaleCount;
+        this.status = status;
+        this.creatorId = creatorId;
+        this.creatorName = creatorName;
+        this.creatorEmail = creatorEmail;
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -61,12 +62,15 @@ public class Trip {
     public Integer getFemaleCount() { return femaleCount; }
     public void setFemaleCount(Integer femaleCount) { this.femaleCount = femaleCount; }
 
-    public User getCreator() { return creator; }
-    public void setCreator(User creator) { this.creator = creator; }
-
-    public List<User> getMembers() { return members; }
-    public void setMembers(List<User> members) { this.members = members; }
-
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public Long getCreatorId() { return creatorId; }
+    public void setCreatorId(Long creatorId) { this.creatorId = creatorId; }
+
+    public String getCreatorName() { return creatorName; }
+    public void setCreatorName(String creatorName) { this.creatorName = creatorName; }
+
+    public String getCreatorEmail() { return creatorEmail; }
+    public void setCreatorEmail(String creatorEmail) { this.creatorEmail = creatorEmail; }
 }
