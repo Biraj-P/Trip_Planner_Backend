@@ -79,6 +79,30 @@ public class TripController {
         return tripRepository.save(trip);
     }
 
+    @PutMapping("{id}/update")
+    public Trip updateTrip(@PathVariable Long id, @RequestBody Trip updatedTrip,
+                           @AuthenticationPrincipal OAuth2User principal) {
+        String email = getEmailFromPrincipal(principal);
+        Trip trip = tripRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trip not found"));
+
+        // Only creator can update
+        if (!trip.getCreator().getEmail().equals(email)) {
+            throw new RuntimeException("Unauthorized: Only trip creator can update");
+        }
+
+        // Update fields
+        trip.setDestination(updatedTrip.getDestination());
+        trip.setBudget(updatedTrip.getBudget());
+        trip.setStartDate(updatedTrip.getStartDate());
+        trip.setEndDate(updatedTrip.getEndDate());
+        trip.setFemaleAllowed(updatedTrip.getFemaleAllowed());
+        trip.setMaleCount(updatedTrip.getMaleCount());
+        trip.setFemaleCount(updatedTrip.getFemaleCount());
+
+        return tripRepository.save(trip);
+    }
+
     // Helper method to extract email from OAuth2User (works for both Google and GitHub)
     private String getEmailFromPrincipal(OAuth2User principal) {
         String email = principal.getAttribute("email");
