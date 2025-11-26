@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // CRITICAL: Allow OPTIONS requests without authentication
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/auth/google").permitAll()
                         // Allow public endpoints
                         .requestMatchers("/", "/login/**", "/oauth2/**", "/error").permitAll()
                         // All other requests require authentication
