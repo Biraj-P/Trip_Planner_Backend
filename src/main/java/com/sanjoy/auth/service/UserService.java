@@ -89,4 +89,22 @@ public class UserService {
                 savedUser.getLocation(),
                 savedUser.getBio());
     }
+
+
+    @Transactional
+    public User findOrCreateGoogleUser(String email, String name, String pictureUrl) {
+        return userRepository.findByEmail(email)
+                .orElseGet(() -> {
+                    User user = new User();
+                    user.setEmail(email);
+                    user.setName(name);
+                    user.setPicture(pictureUrl);
+                    // set any defaults you like here (age, gender, etc.)
+                    return userRepository.save(user);
+                });
+    }
+
+
+
+
 }
