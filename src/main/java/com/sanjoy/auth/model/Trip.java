@@ -20,8 +20,8 @@ public class Trip {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date startDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-
     private Date endDate;
+
     private Boolean femaleAllowed;
     private Integer maleCount;
     private Integer femaleCount;

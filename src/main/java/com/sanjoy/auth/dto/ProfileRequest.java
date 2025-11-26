@@ -7,6 +7,8 @@ public class ProfileRequest {
     private String college;
     private String course;
     private Integer graduationYear;
+    private String location;
+
     private String bio;
 
     // Getters and setters
@@ -27,6 +29,13 @@ public class ProfileRequest {
 
     public Integer getGraduationYear() { return graduationYear; }
     public void setGraduationYear(Integer graduationYear) { this.graduationYear = graduationYear; }
+
+    public String getLocation() {
+        return location;
+    }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public String getBio() { return bio; }
     public void setBio(String bio) { this.bio = bio; }

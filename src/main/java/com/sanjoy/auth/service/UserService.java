@@ -34,6 +34,7 @@ public class UserService {
                 user.getCollege(),
                 user.getCourse(),
                 user.getGraduationYear(),
+                user.getLocation(),
                 user.getBio()
         );
     }
@@ -65,6 +66,9 @@ public class UserService {
         if (request.getGraduationYear() != null) {
             user.setGraduationYear(request.getGraduationYear());
         }
+        if (request.getLocation() != null) {
+            user.setLocation(request.getLocation());
+        }
         if (request.getBio() != null && !request.getBio().isEmpty()) {
             user.setBio(request.getBio());
         }
@@ -82,7 +86,7 @@ public class UserService {
                 savedUser.getCollege(),
                 savedUser.getCourse(),
                 savedUser.getGraduationYear(),
-                savedUser.getBio()
-        );
+                savedUser.getLocation(),
+                savedUser.getBio());
     }
 }

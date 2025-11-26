@@ -29,6 +29,9 @@ public class User {
     @Column(name = "graduation_year")
     private Integer graduationYear;
 
+    @Column
+    private String location;
+
     @Column(length = 500)
     private String bio;
 
@@ -78,6 +81,9 @@ public class User {
 
     public Integer getGraduationYear() { return graduationYear; }
     public void setGraduationYear(Integer graduationYear) { this.graduationYear = graduationYear; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
     public String getBio() { return bio; }
     public void setBio(String bio) { this.bio = bio; }

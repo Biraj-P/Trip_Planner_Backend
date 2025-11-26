@@ -11,12 +11,13 @@ public class ProfileResponse {
     private String college;
     private String course;
     private Integer graduationYear;
+    private String location;
     private String bio;
 
     // Constructor
     public ProfileResponse(Long id, String name, String email, String picture,
                            Integer age, String gender, String phoneNumber,
-                           String college, String course, Integer graduationYear, String bio) {
+                           String college, String course, Integer graduationYear, String location, String bio) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -27,6 +28,7 @@ public class ProfileResponse {
         this.college = college;
         this.course = course;
         this.graduationYear = graduationYear;
+        this.location = location;
         this.bio = bio;
     }
 
@@ -60,6 +62,9 @@ public class ProfileResponse {
 
     public Integer getGraduationYear() { return graduationYear; }
     public void setGraduationYear(Integer graduationYear) { this.graduationYear = graduationYear; }
+
+    public  String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
     public String getBio() { return bio; }
     public void setBio(String bio) { this.bio = bio; }
